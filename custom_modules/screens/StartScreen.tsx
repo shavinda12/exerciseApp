@@ -23,10 +23,7 @@ const StartScreen = () => {
       resizeMode="cover">
         <View style={styles.overlay}>
             <Button buttonText='START YOUR FITNESS ADVENTURE' buttonTextColor='#000' onClickButton={navigationToLoginScreen}/>
-            <View style={styles.textButtonContainer}>
-              <Text style={styles.textStyle}>Don't have an account?</Text>
-              <TextButton text="REGISTER"/>
-            </View>
+            <TextButton titleText="Don't have an account?" buttonText="REGISTER"/>
         </View>
       </ImageBackground>
   );
@@ -42,16 +39,6 @@ const styles=StyleSheet.create({
         justifyContent:"flex-end",
         marginBottom:"20%"
     },
-    textButtonContainer:{
-      display:"flex",
-      flexDirection:"row",
-      justifyContent:"center",
-      marginTop:10,
-    },
-    textStyle:{
-      color:"#fff",
-      marginRight:5
-    }
     
 })
 
