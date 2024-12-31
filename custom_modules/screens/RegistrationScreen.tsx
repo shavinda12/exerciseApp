@@ -6,9 +6,12 @@ import Button from '../components/Button';
 import TextButton from '../components/TextButton';
 import {z} from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { UserDetails } from '../types/UserDetails';
 
 const registrationSchema = z.object({
-  userName: z.string().min(1, {message: 'Name cannot be emplty'}),
+  firstName: z.string().min(1, {message: 'Name cannot be emplty'}),
+  lastName: z.string().min(1, {message: 'Name cannot be emplty'}),
   password: z
     .string()
     .min(8, {message: 'password must have at least 08 characters'})
@@ -40,8 +43,39 @@ const RegistrationScreen = () => {
     resolver: zodResolver(registrationSchema),
   });
 
-  const onSubmit = (data: RegistrationFormData) => {
-    
+  const onSubmit = async ({
+    firstName,
+    lastName,
+    password,
+    confirmPassword,
+    mobile,
+  }: RegistrationFormData) => {
+    try {
+      if (password != confirmPassword) {
+        console.log('password mistmatch');
+      }
+      const newUser = {
+        firstName:firstName,
+        lastName:lastName,
+        mobile: mobile,
+        password: password,
+      };
+      const storedUsers = await AsyncStorage.getItem('@users');
+      const users: (UserDetails)[] = storedUsers
+        ? JSON.parse(storedUsers)
+        : [];
+
+      const userExist = users.some(user => user.firstName == firstName);
+      if (userExist) {
+        console.log('user exsit');
+        return false;
+      }
+      users.push(newUser);
+      await AsyncStorage.setItem('@users', JSON.stringify(users));
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
   };
 
   return (
@@ -64,7 +98,7 @@ const RegistrationScreen = () => {
         <View style={styles.inputFeildContainer}>
           <Controller
             control={control}
-            name="userName"
+            name="firstName"
             render={({field: {onChange, onBlur, value}}) => (
               <TextInput
                 style={styles.inputBox}
@@ -75,8 +109,27 @@ const RegistrationScreen = () => {
               />
             )}
           />
-          {errors.userName && (
-            <Text style={styles.errorText}>{errors.userName.message}</Text>
+          {errors.firstName && (
+            <Text style={styles.errorText}>{errors.firstName.message}</Text>
+          )}
+        </View>
+
+        <View style={styles.inputFeildContainer}>
+          <Controller
+            control={control}
+            name="lastName"
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={styles.inputBox}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                placeholder="Enter your name"
+              />
+            )}
+          />
+          {errors.lastName && (
+            <Text style={styles.errorText}>{errors.lastName.message}</Text>
           )}
         </View>
 
@@ -112,7 +165,7 @@ const RegistrationScreen = () => {
                 value={value}
                 placeholder="Enter your password"
                 secureTextEntry={true}
-                keyboardType="visible-password"
+                //keyboardType="visible-password"
               />
             )}
           />
@@ -133,7 +186,7 @@ const RegistrationScreen = () => {
                 value={value}
                 placeholder="Confirm your password"
                 secureTextEntry={true}
-                keyboardType="visible-password"
+                //keyboardType="visible-password"
               />
             )}
           />

@@ -3,13 +3,15 @@ import React from 'react';
 import StartScreen from '../../custom_modules/screens/StartScreen';
 import LoginScreen from '../../custom_modules/screens/LoginScreen';
 import RegistrationScreen from '../../custom_modules/screens/RegistrationScreen';
+import HomeScreen from '../../custom_modules/screens/HomeScreen';
 
 
 
 export type StackParamList={
   StartScreen:undefined,
   LoginScreen:undefined,
-  RegistrationScreen:undefined
+  RegistrationScreen:undefined,
+  HomeScreen:undefined
 }
 
 const stack = createNativeStackNavigator<StackParamList>();
@@ -18,10 +20,11 @@ const StackNavigation = () => {
   return (
     <stack.Navigator
       screenOptions={{headerShown: false}}
-      initialRouteName="RegistrationScreen">
+      initialRouteName="HomeScreen">
       <stack.Screen name="StartScreen" component={StartScreen}></stack.Screen>
       <stack.Screen name="LoginScreen" component={LoginScreen}></stack.Screen>
       <stack.Screen name="RegistrationScreen" component={RegistrationScreen}></stack.Screen>
+      <stack.Screen name="HomeScreen" component={HomeScreen}></stack.Screen>
     </stack.Navigator>
   );
 };
