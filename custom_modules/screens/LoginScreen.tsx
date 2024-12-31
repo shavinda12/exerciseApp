@@ -6,7 +6,11 @@ import {Controller, useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import Button from '../components/Button';
 import TextButton from '../components/TextButton';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {UserDetails} from '../types/UserDetails';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {StackParamList} from '../../Navigation/StackNavigation/stackNavigation';
+import {useNavigation} from '@react-navigation/native';
 
 const loginSchema = z.object({
   userName: z.string().min(1, {message: 'Password cannot be emplty'}),
@@ -15,7 +19,13 @@ const loginSchema = z.object({
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
+type StackNavigationType = NativeStackNavigationProp<
+  StackParamList,
+  'LoginScreen'
+>;
+
 const LoginScreen = () => {
+  const navigation = useNavigation<StackNavigationType>();
   const {
     control,
     formState: {errors},
@@ -24,8 +34,25 @@ const LoginScreen = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginFormData) => {
-    console.log(data);
+  const onSubmit = async (data: LoginFormData) => {
+    const storedUsers = await AsyncStorage.getItem('@users');
+    const users: UserDetails[] = storedUsers ? JSON.parse(storedUsers) : [];
+    const auth = users.find(user => user.firstName == data.userName);
+    if (auth) {
+      if (auth.password == data.password) {
+        await AsyncStorage.setItem(
+          'LoggedUser',
+          auth.firstName + ' ' + auth.lastName,
+        );
+        navigation.navigate('HomeScreen');
+      } else {
+        console.log('Invalid credential');
+        return false;
+      }
+    } else {
+      console.log('Invalid credential');
+      return false;
+    }
   };
 
   return (
@@ -83,14 +110,14 @@ const LoginScreen = () => {
             <Text style={styles.errorText}>{errors.userName.message}</Text>
           )}
         </View>
-        </View>
-        <View style={{marginTop:100,margin: 20,}}>
-          <Button
-            buttonText="SIGN IN"
-            buttonTextColor="#fff"
-            onClickButton={handleSubmit(onSubmit)}
-          />
-          <TextButton titleText="Don't have an account?" buttonText='REGISTER'/>
+      </View>
+      <View style={{marginTop: 100, margin: 20}}>
+        <Button
+          buttonText="SIGN IN"
+          buttonTextColor="#fff"
+          onClickButton={handleSubmit(onSubmit)}
+        />
+        <TextButton titleText="Don't have an account?" buttonText="REGISTER" />
       </View>
     </View>
   );
@@ -105,11 +132,11 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   titleContainer: {
-    marginTop:100,
+    marginTop: 100,
     margin: 20,
   },
   formContainer: {
-    marginTop:100,
+    marginTop: 100,
     margin: 20,
   },
   inputBox: {
