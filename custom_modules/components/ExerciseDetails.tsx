@@ -15,6 +15,7 @@ const ExerciseDetails = ({topic, value}: ExerciseDetailsProp) => {
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop:10,
+        padding:5
       }}>
       <View style={{width:"30%"}}>
         <TextTitle
@@ -24,7 +25,7 @@ const ExerciseDetails = ({topic, value}: ExerciseDetailsProp) => {
           fontWeight="bold"
         />
       </View>
-      <View style={{width:"80%",justifyContent:"flex-start"}}>
+      <View style={{width:"60%",justifyContent:"flex-start"}}>
         <TextTitle
           fontSize={14}
           fontColor="#000"

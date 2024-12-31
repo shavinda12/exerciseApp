@@ -1,10 +1,15 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import TextTitle from '../components/TextTitle';
-import ExerciseCard from '../components/ExerciseCard';
 import {ScrollView} from 'react-native';
+import useGetExerciseList from '../hooks/useGetExerciseList';
+import ExerciseCard from '../components/ExerciseCard';
 
 const HomeScreen = () => {
+
+   const {data:exerciseList,error,isLoading}=useGetExerciseList()
+
+
   return (
     <View style={styles.container}>
       <View>
@@ -19,13 +24,6 @@ const HomeScreen = () => {
           fontColor="#fff"
           title="Nethupama Shavinda"
           fontWeight="400"
-        />
-      </View>
-      <View style={styles.imageContainer}>
-        <Image
-          source={require('../assets/homeBackgroundImage.png')}
-          resizeMode="cover"
-          style={{width: '100%', height: '100%'}}
         />
       </View>
 
@@ -44,6 +42,16 @@ const HomeScreen = () => {
         />
       </View>
 
+      <View style={styles.imageContainer}>
+        <Image
+          source={require('../assets/homeBackgroundImage.png')}
+          resizeMode="cover"
+          style={{width: '100%', height: '100%'}}
+        />
+      </View>
+
+      
+
       <View style={{marginTop: 10}}>
         <TextTitle
           fontSize={22}
@@ -52,28 +60,14 @@ const HomeScreen = () => {
           fontWeight="400"
         />
       </View>
+      {!isLoading?(
       <ScrollView
         style={styles.exerciseCardScroll}
         contentContainerStyle={styles.exerciseCardContainer}>
-        <ExerciseCard
-          gifUrl="https://v2.exercisedb.io/image/Y2Lu-2Bemqo-YZ"
-          name="45° side bend"
-          target="abs"
-          bodyPart="waist"
-        />
-        <ExerciseCard
-          gifUrl="https://v2.exercisedb.io/image/Y2Lu-2Bemqo-YZ"
-          name="45° side bend"
-          target="abs"
-          bodyPart="waist"
-        />
-        <ExerciseCard
-          gifUrl="https://v2.exercisedb.io/image/Y2Lu-2Bemqo-YZ"
-          name="45° side bend"
-          target="abs"
-          bodyPart="waist"
-        />
-      </ScrollView>
+          {exerciseList && exerciseList.map((exercise)=>(
+            <ExerciseCard exercise={exercise} key={exercise.id}/>
+          ))} 
+      </ScrollView>):null}
     </View>
   );
 };
