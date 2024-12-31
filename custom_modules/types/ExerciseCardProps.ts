@@ -1,7 +1,5 @@
+import { Exercise } from "./Exercise";
 
 export interface ExerciseCardProps{
-    gifUrl:string,
-    name:string,
-    bodyPart:string,
-    target:string
+    exercise:Exercise
 }
