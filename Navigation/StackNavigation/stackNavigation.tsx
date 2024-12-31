@@ -5,13 +5,16 @@ import LoginScreen from '../../custom_modules/screens/LoginScreen';
 import RegistrationScreen from '../../custom_modules/screens/RegistrationScreen';
 import HomeScreen from '../../custom_modules/screens/HomeScreen';
 import ExerciseDetailScreen from '../../custom_modules/screens/ExerciseDetailScreen';
+import { Exercise } from '../../custom_modules/types/Exercise';
+import WorkOutScreen from '../../custom_modules/screens/WorkOutScreen';
 
 export type StackParamList = {
   StartScreen: undefined;
   LoginScreen: undefined;
   RegistrationScreen: undefined;
   HomeScreen: undefined;
-  ExerciseDetailScreen: undefined;
+  "ExerciseDetailScreen": {exercise:Exercise}
+  WorkoutScreen:undefined
 };
 
 const stack = createNativeStackNavigator<StackParamList>();
@@ -30,6 +33,9 @@ const StackNavigation = () => {
       <stack.Screen
         name="ExerciseDetailScreen"
         component={ExerciseDetailScreen}></stack.Screen>
+      <stack.Screen
+        name="WorkoutScreen"
+        component={WorkOutScreen}></stack.Screen>
     </stack.Navigator>
   );
 };

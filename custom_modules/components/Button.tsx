@@ -4,13 +4,14 @@ import { StyleSheet, Text, TouchableOpacity} from 'react-native'
 
 interface ButtonProps{
     buttonText:string,
-    buttonTextColor:string
+    buttonTextColor:string,
+    backgroundColr?:string,
     onClickButton:()=>void
 }
 
-const Button = ({buttonText,buttonTextColor,onClickButton}:ButtonProps) => {
+const Button = ({buttonText,buttonTextColor,onClickButton,backgroundColr}:ButtonProps) => {
   return (
-    <TouchableOpacity style={styles.buttonContainer} onPress={onClickButton}>
+    <TouchableOpacity style={[styles.buttonContainer,{backgroundColor:backgroundColr}]} onPress={onClickButton}>
         <Text style={[styles.buttonText,{color:buttonTextColor}]}>{buttonText}</Text>
     </TouchableOpacity>
   )

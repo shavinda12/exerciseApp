@@ -7,7 +7,7 @@ const useGetExerciseList=()=>{
 
     const getExerciseList=async()=>{
         try{
-        const {data}=await axios.get<Exercise[]>("https://exercisedb.p.rapidapi.com/exercises?limit=10&offset=0",{
+        const {data}=await axios.get<Exercise[]>("https://exercisedb.p.rapidapi.com/exercises?limit=20&offset=0",{
             headers:{
                 Accept:"application/json",
                     "x-rapidapi-ua": "RapidAPI-Playground",

@@ -1,14 +1,30 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, Image, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
 import TextTitle from '../components/TextTitle';
 import {ScrollView} from 'react-native';
 import useGetExerciseList from '../hooks/useGetExerciseList';
 import ExerciseCard from '../components/ExerciseCard';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {StackParamList} from '../../Navigation/StackNavigation/stackNavigation';
+import {useNavigation} from '@react-navigation/native';
+import {Exercise} from '../types/Exercise';
+import useSelectedExerciseStore from '../store/SelectedExerciseStore';
+
+type HomeScreenNavigationProp = NativeStackNavigationProp<
+  StackParamList,
+  'HomeScreen'
+>;
 
 const HomeScreen = () => {
+  const navigation = useNavigation<HomeScreenNavigationProp>();
 
-   const {data:exerciseList,error,isLoading}=useGetExerciseList()
+  const {data: exerciseList, error, isLoading} = useGetExerciseList();
 
+  const {selectedExercises} = useSelectedExerciseStore();
+
+  const onExerciseCardPress = (exercise: Exercise) => {
+    navigation.navigate('ExerciseDetailScreen', {exercise});
+  };
 
   return (
     <View style={styles.container}>
@@ -27,21 +43,6 @@ const HomeScreen = () => {
         />
       </View>
 
-      <View style={styles.statuContainer}>
-        <TextTitle
-          fontSize={20}
-          fontColor="#000"
-          title="Total Likes"
-          fontWeight="bold"
-        />
-        <TextTitle
-          fontSize={20}
-          fontColor="#000"
-          title="24"
-          fontWeight="bold"
-        />
-      </View>
-
       <View style={styles.imageContainer}>
         <Image
           source={require('../assets/homeBackgroundImage.png')}
@@ -49,8 +50,6 @@ const HomeScreen = () => {
           style={{width: '100%', height: '100%'}}
         />
       </View>
-
-      
 
       <View style={{marginTop: 10}}>
         <TextTitle
@@ -60,14 +59,44 @@ const HomeScreen = () => {
           fontWeight="400"
         />
       </View>
-      {!isLoading?(
-      <ScrollView
-        style={styles.exerciseCardScroll}
-        contentContainerStyle={styles.exerciseCardContainer}>
-          {exerciseList && exerciseList.map((exercise)=>(
-            <ExerciseCard exercise={exercise} key={exercise.id}/>
-          ))} 
-      </ScrollView>):null}
+      {!isLoading ? (
+        <ScrollView
+          style={styles.exerciseCardScroll}
+          contentContainerStyle={styles.exerciseCardContainer}>
+          {exerciseList &&
+            exerciseList.map(exercise => (
+              <ExerciseCard
+                exercise={exercise}
+                key={exercise.id}
+                onCardPress={onExerciseCardPress}
+              />
+            ))}
+        </ScrollView>
+      ) : (
+        <View style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
+          <ActivityIndicator size="large" color="#3BF819"/>
+        </View>
+        
+      )}
+
+      <TouchableHighlight
+        style={styles.statuContainer}
+        onPress={() => navigation.navigate('WorkoutScreen')}>
+        <View style={{display:"flex",flexDirection:"row",gap:100}}> 
+          <TextTitle
+            fontSize={18}
+            fontColor="#000"
+            title="See Your Workout"
+            fontWeight="400"
+          />
+          <TextTitle
+            fontSize={18}
+            fontColor="#000"
+            title={selectedExercises.length.toString()}
+            fontWeight="300"
+          />
+        </View>
+      </TouchableHighlight>
     </View>
   );
 };
@@ -83,7 +112,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: 350,
-    height: 210,
+    height: 200,
     borderBottomRightRadius: 10,
     borderBottomLeftRadius: 10,
     marginTop: 10,
@@ -91,7 +120,7 @@ const styles = StyleSheet.create({
   statuContainer: {
     marginTop: 10,
     backgroundColor: '#3BF819',
-    height: 50,
+    height: 40,
     width: 350,
     borderRadius: 10,
     display: 'flex',

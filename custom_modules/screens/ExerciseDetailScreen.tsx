@@ -8,12 +8,41 @@ import {
 } from 'react-native';
 import TextTitle from '../components/TextTitle';
 import Button from '../components/Button';
+import {RouteProp, useNavigation} from '@react-navigation/native';
+import {StackParamList} from '../../Navigation/StackNavigation/stackNavigation';
+import useSelectedExerciseStore from '../store/SelectedExerciseStore';
 
-const ExerciseDetailScreen = () => {
+type ExerciseDetailScreenRouteProps = RouteProp<
+  StackParamList,
+  'ExerciseDetailScreen'
+>;
+
+const ExerciseDetailScreen = ({
+  route,
+}: {
+  route: ExerciseDetailScreenRouteProps;
+}) => {
+  const {exercise} = route.params;
+
+  const navigate = useNavigation();
+  const {selectedExercises:selectedExercisesList,increment,decrement}=useSelectedExerciseStore();
+
+  const isExercisePresent=selectedExercisesList.some(exe=>exe.id === exercise.id)
+
+  const addToWorkout=()=>{
+    if(isExercisePresent){
+      decrement(exercise.id)
+    }else{
+      increment(exercise)
+    }
+  }
+
   return (
     <View style={styles.conatiner}>
       <View style={styles.header}>
-        <TouchableHighlight style={styles.iconContainer}>
+        <TouchableHighlight
+          style={styles.iconContainer}
+          onPress={() => navigate.goBack()}>
           <Image
             source={require('../icons/back_arrow.png')}
             style={{width: '100%', height: '100%'}}
@@ -23,7 +52,7 @@ const ExerciseDetailScreen = () => {
           fontWeight="600"
           fontSize={20}
           fontColor="#fff"
-          title="Bench Press"
+          title={exercise.name}
         />
       </View>
 
@@ -36,7 +65,7 @@ const ExerciseDetailScreen = () => {
         }}>
         <View style={styles.imageContainer}>
           <Image
-            source={{uri: 'https://v2.exercisedb.io/image/Y2Lu-2Bemqo-YZ'}}
+            source={{uri: exercise.gifUrl}}
             style={{width: '100%', height: '100%', borderRadius: 20}}
           />
         </View>
@@ -51,78 +80,39 @@ const ExerciseDetailScreen = () => {
         />
       </View>
 
-      <ScrollView
-        style={styles.exercisedetailScroll}
-        contentContainerStyle={styles.exerciseCardContainer}>
-        <View
-          style={{
-            marginTop: 20,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            justifyContent: 'center',
-            gap: 10,
-          }}>
-          <TextTitle
-            fontWeight="200"
-            fontSize={16}
-            fontColor="#fff"
-            title="Lie flat on your back with your knees bent and feet flat on the ground."
-          />
-
-          <TextTitle
-            fontWeight="200"
-            fontSize={16}
-            fontColor="#fff"
-            title="Place your hands behind your head with your elbows pointing outwards."
-          />
-
-          <TextTitle
-            fontWeight="200"
-            fontSize={16}
-            fontColor="#fff"
-            title="Engaging your abs, slowly lift your upper body off the ground, curling forward until your torso is at a 45-degree angle."
-          />
-
-          <TextTitle
-            fontWeight="200"
-            fontSize={16}
-            fontColor="#fff"
-            title="Pause for a moment at the top, then slowly lower your upper body back down to the starting position."
-          />
-
-          <TextTitle
-            fontWeight="200"
-            fontSize={16}
-            fontColor="#fff"
-            title="Repeat for the desired number of repetitions."
-          />
-
-          <TextTitle
-            fontWeight="200"
-            fontSize={16}
-            fontColor="#fff"
-            title="Pause for a moment at the top, then slowly lower your upper body back down to the starting position."
-          />
-
-          <TextTitle
-            fontWeight="200"
-            fontSize={16}
-            fontColor="#fff"
-            title="Pause for a moment at the top, then slowly lower your upper body back down to the starting position."
-          />
-
-          <TextTitle
-            fontWeight="200"
-            fontSize={16}
-            fontColor="#fff"
-            title="Pause for a moment at the top, then slowly lower your upper body back down to the starting position."
-          />
-        </View>
-      </ScrollView>
+      {exercise ? (
+        <ScrollView
+          style={styles.exercisedetailScroll}
+          contentContainerStyle={styles.exerciseCardContainer}>
+          <View
+            style={{
+              marginTop: 20,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              justifyContent: 'center',
+              gap: 10,
+            }}>
+            {exercise.instructions.map((instruction, index) => (
+              <TextTitle
+                key={index}
+                fontWeight="200"
+                fontSize={16}
+                fontColor="#fff"
+                title={instruction}
+              />
+            ))}
+          </View>
+        </ScrollView>
+      ) : null}
 
       <View>
-        <Button buttonText='Add To Workout' buttonTextColor='#fff' onClickButton={()=>console.log("hello")}/>
+        <Button
+          buttonText={isExercisePresent?"Delete From Workout":"Add To Workout"}
+          buttonTextColor="#fff"
+          backgroundColr={isExercisePresent?"red":"#3BF819"}
+          onClickButton={addToWorkout}
+        />
       </View>
     </View>
   );
@@ -135,11 +125,10 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   header: {
-    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    gap: 40,
+    gap: 20,
   },
   iconContainer: {
     width: 40,
