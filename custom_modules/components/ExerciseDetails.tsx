@@ -20,15 +20,15 @@ const ExerciseDetails = ({topic, value}: ExerciseDetailsProp) => {
       <View style={{width:"30%"}}>
         <TextTitle
           fontSize={14}
-          fontColor="#000"
+          fontColor="#fff"
           title={topic}
-          fontWeight="bold"
+          fontWeight="normal"
         />
       </View>
       <View style={{width:"60%",justifyContent:"flex-start"}}>
         <TextTitle
           fontSize={14}
-          fontColor="#000"
+          fontColor="#fff"
           title={value}
           fontWeight="normal"
         />

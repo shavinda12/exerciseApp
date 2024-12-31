@@ -36,7 +36,8 @@
     "react-native-vector-icons": "^10.0.3",
     "react-native-virtualized-view": "^1.0.0",
     "react-query": "^3.39.3",
-    "zod": "^3.24.1"
+    "zod": "^3.24.1",
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
