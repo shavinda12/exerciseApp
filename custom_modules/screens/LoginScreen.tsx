@@ -55,6 +55,10 @@ const LoginScreen = () => {
     }
   };
 
+  const registerScreenNavigation=()=>{
+    navigation.navigate("RegistrationScreen")
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -118,7 +122,7 @@ const LoginScreen = () => {
           onClickButton={handleSubmit(onSubmit)}
           backgroundColr='#12F62C'
         />
-        <TextButton titleText="Don't have an account?" buttonText="REGISTER" />
+        <TextButton titleText="Don't have an account?" buttonText="REGISTER" onTextButtonPress={registerScreenNavigation}/>
       </View>
     </View>
   );

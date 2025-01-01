@@ -8,6 +8,9 @@ import {z} from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserDetails } from '../types/UserDetails';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { StackParamList } from '../../Navigation/StackNavigation/stackNavigation';
+import { useNavigation } from '@react-navigation/native';
 
 const registrationSchema = z.object({
   firstName: z.string().min(1, {message: 'Name cannot be emplty'}),
@@ -34,6 +37,13 @@ const registrationSchema = z.object({
 
 type RegistrationFormData = z.infer<typeof registrationSchema>;
 
+
+
+type StackNavigationType = NativeStackNavigationProp<
+  StackParamList,
+  'LoginScreen'
+>;
+
 const RegistrationScreen = () => {
   const {
     control,
@@ -42,6 +52,8 @@ const RegistrationScreen = () => {
   } = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
   });
+
+  const navigation=useNavigation<StackNavigationType>()
 
   const onSubmit = async ({
     firstName,
@@ -117,25 +129,6 @@ const RegistrationScreen = () => {
         <View style={styles.inputFeildContainer}>
           <Controller
             control={control}
-            name="lastName"
-            render={({field: {onChange, onBlur, value}}) => (
-              <TextInput
-                style={styles.inputBox}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                placeholder="Enter your name"
-              />
-            )}
-          />
-          {errors.lastName && (
-            <Text style={styles.errorText}>{errors.lastName.message}</Text>
-          )}
-        </View>
-
-        <View style={styles.inputFeildContainer}>
-          <Controller
-            control={control}
             name="mobile"
             render={({field: {onChange, onBlur, value}}) => (
               <TextInput
@@ -204,7 +197,7 @@ const RegistrationScreen = () => {
           onClickButton={handleSubmit(onSubmit)}
           backgroundColr='#12F62C'
         />
-        <TextButton titleText="Don't have an account?" buttonText="REGISTER" />
+        <TextButton titleText="Don't have an account?" buttonText="Login" onTextButtonPress={()=>navigation.navigate("LoginScreen")}/>
       </View>
     </View>
   );

@@ -23,7 +23,7 @@ const StartScreen = () => {
       resizeMode="cover">
         <View style={styles.overlay}>
             <Button backgroundColr='#12F62C' buttonText='START YOUR FITNESS ADVENTURE' buttonTextColor='#000' onClickButton={navigationToLoginScreen}/>
-            <TextButton titleText="Don't have an account?" buttonText="REGISTER"/>
+            <TextButton titleText="Don't have an account?" buttonText="REGISTER" onTextButtonPress={()=>navigation.navigate("RegistrationScreen")}/>
         </View>
       </ImageBackground>
   );
