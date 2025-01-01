@@ -22,7 +22,7 @@ const StartScreen = () => {
       source={require('../assets/startBackground.png')}
       resizeMode="cover">
         <View style={styles.overlay}>
-            <Button buttonText='START YOUR FITNESS ADVENTURE' buttonTextColor='#000' onClickButton={navigationToLoginScreen}/>
+            <Button backgroundColr='#12F62C' buttonText='START YOUR FITNESS ADVENTURE' buttonTextColor='#000' onClickButton={navigationToLoginScreen}/>
             <TextButton titleText="Don't have an account?" buttonText="REGISTER"/>
         </View>
       </ImageBackground>

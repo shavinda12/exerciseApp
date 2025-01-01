@@ -23,7 +23,7 @@ const StackNavigation = () => {
   return (
     <stack.Navigator
       screenOptions={{headerShown: false}}
-      initialRouteName="HomeScreen">
+      initialRouteName="StartScreen">
       <stack.Screen name="StartScreen" component={StartScreen}></stack.Screen>
       <stack.Screen name="LoginScreen" component={LoginScreen}></stack.Screen>
       <stack.Screen

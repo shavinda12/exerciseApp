@@ -116,6 +116,7 @@ const LoginScreen = () => {
           buttonText="SIGN IN"
           buttonTextColor="#fff"
           onClickButton={handleSubmit(onSubmit)}
+          backgroundColr='#12F62C'
         />
         <TextButton titleText="Don't have an account?" buttonText="REGISTER" />
       </View>
