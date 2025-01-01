@@ -3,16 +3,19 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 interface TextButtonProps {
   titleText: string;
   buttonText: string;
+  onTextButtonPress:()=>void
 }
 
-const TextButton = ({buttonText,titleText}: TextButtonProps) => {
+const TextButton = ({buttonText,titleText,onTextButtonPress}: TextButtonProps) => {
   return (
-    <TouchableOpacity>
+    
       <View style={styles.textButtonContainer}>
         <Text style={styles.textStyle}>{titleText}</Text>
+        <TouchableOpacity onPress={onTextButtonPress}>
         <Text style={styles.textButton}>{buttonText}</Text>
+        </TouchableOpacity>
       </View>
-    </TouchableOpacity>
+    
   );
 };
 
