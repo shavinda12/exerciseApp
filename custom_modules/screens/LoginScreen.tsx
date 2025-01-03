@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {StyleSheet, Text, TextInput, ToastAndroid, View} from 'react-native';
 import TextTitle from '../components/TextTitle';
 import z from 'zod';
 import {Controller, useForm} from 'react-hook-form';
@@ -11,6 +11,8 @@ import {UserDetails} from '../types/UserDetails';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {StackParamList} from '../../Navigation/StackNavigation/stackNavigation';
 import {useNavigation} from '@react-navigation/native';
+import useUserNameStore from '../store/UserNameStore';
+
 
 const loginSchema = z.object({
   userName: z.string().min(1, {message: 'Password cannot be emplty'}),
@@ -26,6 +28,8 @@ type StackNavigationType = NativeStackNavigationProp<
 
 const LoginScreen = () => {
   const navigation = useNavigation<StackNavigationType>();
+  const {setUserName} = useUserNameStore();
+
   const {
     control,
     formState: {errors},
@@ -40,24 +44,21 @@ const LoginScreen = () => {
     const auth = users.find(user => user.firstName == data.userName);
     if (auth) {
       if (auth.password == data.password) {
-        await AsyncStorage.setItem(
-          'LoggedUser',
-          auth.firstName + ' ' + auth.lastName,
-        );
+        setUserName(data.userName);
         navigation.navigate('HomeScreen');
       } else {
-        console.log('Invalid credential');
+        ToastAndroid.show("Invalid Credentials",ToastAndroid.SHORT)
         return false;
       }
     } else {
-      console.log('Invalid credential');
+      ToastAndroid.show("Invalid Credentials",ToastAndroid.SHORT)
       return false;
     }
   };
 
-  const registerScreenNavigation=()=>{
-    navigation.navigate("RegistrationScreen")
-  }
+  const registerScreenNavigation = () => {
+    navigation.navigate('RegistrationScreen');
+  };
 
   return (
     <View style={styles.container}>
@@ -114,15 +115,20 @@ const LoginScreen = () => {
             <Text style={styles.errorText}>{errors.userName.message}</Text>
           )}
         </View>
+        <View></View>
       </View>
       <View style={{marginTop: 100, margin: 20}}>
         <Button
           buttonText="SIGN IN"
           buttonTextColor="#fff"
           onClickButton={handleSubmit(onSubmit)}
-          backgroundColr='#12F62C'
+          backgroundColr="#12F62C"
         />
-        <TextButton titleText="Don't have an account?" buttonText="REGISTER" onTextButtonPress={registerScreenNavigation}/>
+        <TextButton
+          titleText="Don't have an account?"
+          buttonText="REGISTER"
+          onTextButtonPress={registerScreenNavigation}
+        />
       </View>
     </View>
   );

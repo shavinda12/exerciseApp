@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {ActivityIndicator, Image, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
 import TextTitle from '../components/TextTitle';
 import {ScrollView} from 'react-native';
@@ -9,11 +9,13 @@ import {StackParamList} from '../../Navigation/StackNavigation/stackNavigation';
 import {useNavigation} from '@react-navigation/native';
 import {Exercise} from '../types/Exercise';
 import useSelectedExerciseStore from '../store/SelectedExerciseStore';
+import useUserNameStore from '../store/UserNameStore';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   StackParamList,
   'HomeScreen'
 >;
+
 
 const HomeScreen = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
@@ -22,9 +24,17 @@ const HomeScreen = () => {
 
   const {selectedExercises} = useSelectedExerciseStore();
 
+  const{loggedUserName}=useUserNameStore()
+
   const onExerciseCardPress = (exercise: Exercise) => {
     navigation.navigate('ExerciseDetailScreen', {exercise});
   };
+
+  useEffect(()=>{
+    
+  },[])
+
+  
 
   return (
     <View style={styles.container}>
@@ -38,14 +48,14 @@ const HomeScreen = () => {
         <TextTitle
           fontSize={22}
           fontColor="#fff"
-          title="Nethupama Shavinda"
+          title={loggedUserName}
           fontWeight="400"
         />
       </View>
 
       <View style={styles.imageContainer}>
         <Image
-          source={require('../assets/homeBackgroundImage.png')}
+          source={require('../assets/exerciseWorkout.jpeg')}
           resizeMode="cover"
           style={{width: '100%', height: '100%'}}
         />
@@ -113,8 +123,8 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: 350,
     height: 200,
-    borderBottomRightRadius: 10,
-    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 50,
+    borderBottomLeftRadius: 50,
     marginTop: 10,
   },
   statuContainer: {

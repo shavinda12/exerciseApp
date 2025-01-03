@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {StyleSheet, Text, TextInput, ToastAndroid, View} from 'react-native';
 import TextTitle from '../components/TextTitle';
 import {Controller, useForm} from 'react-hook-form';
 import Button from '../components/Button';
@@ -62,9 +62,12 @@ const RegistrationScreen = () => {
     confirmPassword,
     mobile,
   }: RegistrationFormData) => {
+
+    console.log("hello world")
+
     try {
       if (password != confirmPassword) {
-        console.log('password mistmatch');
+        ToastAndroid.show("Password are miss matching",ToastAndroid.SHORT)
       }
       const newUser = {
         firstName:firstName,
@@ -79,13 +82,14 @@ const RegistrationScreen = () => {
 
       const userExist = users.some(user => user.firstName == firstName);
       if (userExist) {
-        console.log('user exsit');
+        ToastAndroid.show("User Name Exists",ToastAndroid.SHORT)
         return false;
       }
       users.push(newUser);
       await AsyncStorage.setItem('@users', JSON.stringify(users));
+      navigation.navigate("LoginScreen")
     } catch (e) {
-      console.log(e);
+      ToastAndroid.show("Something went wrong",ToastAndroid.SHORT)
       return false;
     }
   };
@@ -96,13 +100,13 @@ const RegistrationScreen = () => {
         <TextTitle
           fontSize={26}
           fontWeight="bold"
-          title="Welcome Back"
+          title="Welocme"
           fontColor="#fff"
         />
         <TextTitle
           fontSize={16}
           fontWeight="400"
-          title="Log into your account"
+          title="Get Registered In Here"
           fontColor="#fff"
         />
       </View>
@@ -117,12 +121,31 @@ const RegistrationScreen = () => {
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
-                placeholder="Enter your name"
+                placeholder="Enter your  first name"
               />
             )}
           />
           {errors.firstName && (
             <Text style={styles.errorText}>{errors.firstName.message}</Text>
+          )}
+        </View>
+
+        <View style={styles.inputFeildContainer}>
+          <Controller
+            control={control}
+            name="lastName"
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={styles.inputBox}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                placeholder="Enter your last name"
+              />
+            )}
+          />
+          {errors.lastName && (
+            <Text style={styles.errorText}>{errors.lastName.message}</Text>
           )}
         </View>
 
@@ -192,7 +215,7 @@ const RegistrationScreen = () => {
       </View>
       <View style={{marginTop: 100, margin: 20}}>
         <Button
-          buttonText="SIGN IN"
+          buttonText="SIGN UP"
           buttonTextColor="#fff"
           onClickButton={handleSubmit(onSubmit)}
           backgroundColr='#12F62C'

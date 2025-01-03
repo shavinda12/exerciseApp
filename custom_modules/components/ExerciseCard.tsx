@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     padding: 15,
-    backgroundColor: '#8F918F',
+    backgroundColor: '#fff',
     borderRadius: 20,
     marginTop: 10,
   },
